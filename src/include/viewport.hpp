@@ -1,10 +1,10 @@
 #ifndef VIEWPORT_HPP
 #define VIEWPORT_HPP
 
-#include "util.hpp"
 #include "vec3.hpp"
-#include "color.hpp"
 #include "ray.hpp"
+#include "color.hpp"
+#include "util.hpp"
 #include "material.hpp"
 #include "surfacelist.hpp"
 
@@ -33,8 +33,8 @@ public:
         }
 
         Ray pixel_ray(int x, int y) {
-                double rand_offset_x = random_double(-0.5, 0.5);
-                double rand_offset_y = random_double(-0.5, 0.5);
+                double rand_offset_x = random_double(Interval(-0.5, 0.5));
+                double rand_offset_y = random_double(Interval(-0.5, 0.5));
 
                 Vec3 direction = pixel_zero + ((x + rand_offset_x)*pixel_delta_x)
                         + ((y + rand_offset_y)*pixel_delta_y) - cam_pos;
