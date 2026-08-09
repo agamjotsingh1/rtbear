@@ -3,6 +3,7 @@
 
 #include "vec3.hpp"
 #include "ray.hpp"
+#include "interval.hpp"
 
 class Hitpoint {
 public:
@@ -14,7 +15,7 @@ public:
 class Surface {
 public:
         virtual ~Surface() {};
-        virtual bool hit(const Ray& ray, double tmin, double tmax, Hitpoint& hitpoint) const = 0;
+        virtual bool hit(const Ray& ray, const Interval& interval, Hitpoint& hitpoint) const = 0;
 };
 
 #endif

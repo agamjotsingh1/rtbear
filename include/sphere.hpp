@@ -4,6 +4,7 @@
 #include <cmath>
 #include "vec3.hpp"
 #include "surface.hpp"
+#include "interval.hpp"
 
 class Sphere: public Surface {
 public:
@@ -12,7 +13,7 @@ public:
         Sphere(): radius(0.0) {}
         Sphere(const Vec3& center, double radius): center(center), radius(radius) {}
 
-        bool hit(const Ray& ray, double tmin, double tmax, Hitpoint& hitpoint) const override {
+        bool hit(const Ray& ray, const Interval& interval, Hitpoint& hitpoint) const override {
                 // quadratic equation with coefficients a, -2b, c
                 // at^2 + (-2b)t + c = 0
                 double a = ray.direction.length_squared();
@@ -23,6 +24,8 @@ public:
                 if(discriminant < 0) return false;
 
                 double t = (b + std::sqrt(discriminant))/a;
+                if(!interval.contains(t)) return false;
+
                 Vec3 point = ray.at(t);
                 Vec3 normal = unitize(point - center);
 

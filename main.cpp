@@ -1,5 +1,5 @@
 #include <iostream>
-#include <limits>
+#include <cmath>
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "viewport.hpp"
@@ -22,12 +22,9 @@ void render(int width, int height, Viewport& viewport, SurfaceList& surfacelist)
         for(int i = 0; i < height; i++) {
                 for(int j = 0; j < width; j++) {
                         Ray pixel_ray = viewport.pixel_ray(j, i);
-
-                        double tmin = 0;
-                        double tmax = std::numeric_limits<double>::max();
                         Hitpoint hitpoint;
 
-                        bool hit = surfacelist.hit(pixel_ray, tmin, tmax, hitpoint);
+                        bool hit = surfacelist.hit(pixel_ray, Interval(0, INFINITY), hitpoint);
 
                         Vec3 normal = hit
                                 ? hitpoint.normal

@@ -5,6 +5,7 @@
 #include <memory>
 #include "vec3.hpp"
 #include "surface.hpp"
+#include "interval.hpp"
 
 class SurfaceList: public Surface {
 public:
@@ -22,13 +23,14 @@ public:
                 world.clear();
         }
         
-        bool hit(const Ray& ray, double tmin, double tmax, Hitpoint& hitpoint) const override {
-                double closest_t = tmax;
+        bool hit(const Ray& ray, const Interval& interval, Hitpoint& hitpoint) const override {
+                double tmin = interval.min;
+                double closest_t = interval.max;
                 bool is_hit = false;
                 Hitpoint temp_hitpoint;
 
                 for(const std::shared_ptr<Surface>& surface : world) {
-                        if(surface->hit(ray, tmin, closest_t, temp_hitpoint)){
+                        if(surface->hit(ray, Interval(tmin, closest_t), temp_hitpoint)){
                                 is_hit = true;
                                 closest_t = temp_hitpoint.t;
                                 hitpoint = temp_hitpoint;
