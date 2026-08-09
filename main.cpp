@@ -24,7 +24,7 @@ void render(int width, int height, Viewport& viewport, SurfaceList& surfacelist)
                         Ray pixel_ray = viewport.pixel_ray(j, i);
                         Hitpoint hitpoint;
 
-                        bool hit = surfacelist.hit(pixel_ray, Interval(0, INFINITY), hitpoint);
+                        bool hit = surfacelist.hit(pixel_ray, Interval(0.0, INFINITY), hitpoint);
 
                         Vec3 normal = hit
                                 ? hitpoint.normal
@@ -48,11 +48,6 @@ int main() {
         double focal_len = 2;
         double viewport_height = 2;
         double viewport_width = viewport_height * ASPECT_RATIO;
-
-        Vec3 sphere_center = Vec3(0, 0, -5);
-        double sphere_radius = 1;
-        Sphere sphere = Sphere(sphere_center, sphere_radius);
-        Surface& surface = sphere;
 
         SurfaceList surfacelist;
         surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(-2, 0, -5), 0.5)));

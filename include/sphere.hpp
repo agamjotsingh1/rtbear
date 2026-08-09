@@ -23,15 +23,18 @@ public:
 
                 if(discriminant < 0) return false;
 
-                double t = (b + std::sqrt(discriminant))/a;
-                if(!interval.contains(t)) return false;
+                double t = (b - std::sqrt(discriminant))/a;
+                if(!interval.contains(t)) {
+                        t = (b + std::sqrt(discriminant))/a;
+                        if(!interval.contains(t)) return false;
+                }
 
                 Vec3 point = ray.at(t);
-                Vec3 normal = unitize(point - center);
+                Vec3 normal = (point - center)/radius;
 
                 hitpoint.point = point;
-                hitpoint.normal = normal;
                 hitpoint.t = t;
+                hitpoint.set_face_normal(ray, normal);
 
                 return true;
         }
