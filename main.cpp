@@ -2,6 +2,7 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "viewport.hpp"
+#include "sphere.hpp"
 
 // display parameters
 #define ASPECT_RATIO (16.0/9.0)
@@ -11,17 +12,21 @@
 #define MAX_COLOR_VAL 255
 
 // render image in PPM format
-void render(int width, int height, Viewport& viewport){
+void render(int width, int height, Viewport& viewport, Sphere& sphere){
         std::cout << "P3\n" << width << " " << height << "\n";
         std::cout << MAX_COLOR_VAL << "\n";
 
         for(int i = 0; i < height; i++) {
                 for(int j = 0; j < width; j++) {
-                        Vec3 direction = unitize((viewport.pixel_ray(j, i)).direction);
+                        Ray pixel_ray = viewport.pixel_ray(j, i);
+
+                        Vec3 direction = unitize(pixel_ray.direction);
                         double a = 0.5*(direction.y + 1.0);
-                        double r = a;
-                        double g = 0.0;
-                        double b = 1-a;
+
+                        bool hit = sphere.hit(pixel_ray);
+                        double r = hit ? a: 1.0;
+                        double g = hit ? (0.5*(direction.x + 1.0)): 1.0;
+                        double b = hit ? (1-a): 1.0;
 
                         int ir = int(255.999 * r);
                         int ig = int(255.999 * g);
@@ -33,11 +38,16 @@ void render(int width, int height, Viewport& viewport){
 }
 
 int main() {
-        Vec3 cam_pos = Vec3(0, 0, 0);
+        Vec3 cam_pos = Vec3(0, 0, -3);
         double focal_len = 2;
-        double viewport_height = 2, viewport_width = 2;
+        double viewport_height = 2;
+        double viewport_width = viewport_height * ASPECT_RATIO;
+
+        Vec3 sphere_center = Vec3(0, 0, -5);
+        double sphere_radius = 1;
+        Sphere sphere = Sphere(sphere_center, sphere_radius);
 
         Viewport viewport(cam_pos, focal_len, viewport_height, viewport_width, HEIGHT, WIDTH);
-        render(WIDTH, HEIGHT, viewport);
+        render(WIDTH, HEIGHT, viewport, sphere);
         return 0;
 }
