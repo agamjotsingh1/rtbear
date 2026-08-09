@@ -2,16 +2,19 @@
 #define SPHERE_HPP
 
 #include <cmath>
+#include <memory>
 #include "vec3.hpp"
 #include "surface.hpp"
 #include "interval.hpp"
+#include "material.hpp"
 
 class Sphere: public Surface {
 public:
         Vec3 center;
         double radius;
+
         Sphere(): radius(0.0) {}
-        Sphere(const Vec3& center, double radius): center(center), radius(radius) {}
+        Sphere(const Vec3& center, double radius, std::shared_ptr<Material> material): center(center), radius(radius), material(material){}
 
         bool hit(const Ray& ray, const Interval& interval, Hitpoint& hitpoint) const override {
                 // quadratic equation with coefficients a, -2b, c
@@ -35,9 +38,13 @@ public:
                 hitpoint.point = point;
                 hitpoint.t = t;
                 hitpoint.set_normal(ray, normal);
+                hitpoint.material = material;
 
                 return true;
         }
+
+private:
+        std::shared_ptr<Material> material;
 };
 
 #endif

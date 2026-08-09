@@ -1,14 +1,19 @@
 #ifndef SURFACE_HPP
 #define SURFACE_HPP
 
+#include <memory>
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "interval.hpp"
+
+class Material;
 
 class Hitpoint {
 public:
         Vec3 point;
         Vec3 normal;
+        // shared ptr because of forward declaration
+        std::shared_ptr<Material> material;
         double t; // ray parameter
 
         void set_normal(const Ray& ray, const Vec3& outward_normal) {

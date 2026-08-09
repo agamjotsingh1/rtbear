@@ -3,27 +3,24 @@
 
 #include "util.hpp"
 #include "vec3.hpp"
+#include "color.hpp"
 #include "ray.hpp"
+#include "material.hpp"
 #include "surfacelist.hpp"
 
 #define REFLECTANCE 0.4
 
-#define MAX_COLOR 255
-using Color = Vec3;
-#define BLACK (Color(0.0, 0.0, 0.0))
-#define WHITE (Color(1.0, 1.0, 1.0))
-#define LIGHT_BLUE (Color(0.6, 0.8, 0.9))
-
 class Viewport {
 public:
         Viewport(
-                        const Vec3& cam_pos, double focal_len,
-                        double viewport_height, double viewport_width,
-                        int img_height, int img_width, int samples_per_pixel, int max_depth
-                ):
-                cam_pos(cam_pos), samples_per_pixel(samples_per_pixel), max_depth(max_depth),
+                const Vec3& cam_pos, double focal_len,
+                double viewport_height, double viewport_width,
+                int img_height, int img_width, int samples_per_pixel, int max_depth
+        ):
+                cam_pos(cam_pos),
                 img_height(img_height), img_width(img_width),
-                viewport_height(viewport_height), viewport_width(viewport_width)
+                viewport_height(viewport_height), viewport_width(viewport_width),
+                samples_per_pixel(samples_per_pixel), max_depth(max_depth)
         {
                         // vectors u and v for positions of viewport in 3D
                         // -height because increase in y in viewport sense
@@ -55,18 +52,16 @@ public:
                 bool hit = surfacelist.hit(ray, Interval(EPSILON, INFINITY), hitpoint);
 
                 if(hit) {
-                        // assuming lambertian surface
-                        Vec3 reflected_direction = hitpoint.normal + Vec3::random();
+                        Ray scattered_ray;
+                        Vec3 attenuation;
 
-                        Ray reflected_ray = Ray(hitpoint.point, reflected_direction);
-                        return REFLECTANCE*(ray_color(reflected_ray, surfacelist, depth-1));
+                        if((hitpoint.material)->scatter(ray, hitpoint, attenuation, scattered_ray))
+                                return attenuation * ray_color(scattered_ray, surfacelist, depth-1);
+                        else
+                                return BLACK;
                 }
 
-                Color color = hit
-                        ? colorize(hitpoint.normal)
-                        : LIGHT_BLUE;
-
-                return color;
+                return LIGHT_BLUE; // void
         }
 
         void render(SurfaceList& surfacelist){
