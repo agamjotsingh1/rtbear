@@ -10,11 +10,10 @@ public:
         Vec3 point;
         Vec3 normal;
         double t; // ray parameter
-        bool front_face;
 
-        void set_face_normal(const Ray& ray, const Vec3& outward_normal) {
+        void set_normal(const Ray& ray, const Vec3& outward_normal) {
                 // front face if the ray direction and outward normal point in different directions
-                front_face = dot(ray.direction, outward_normal) < 0;
+                bool front_face = dot(ray.direction, outward_normal) < 0;
 
                 // make it so that normal points always points against the ray direction
                 normal = front_face ? outward_normal: -outward_normal;

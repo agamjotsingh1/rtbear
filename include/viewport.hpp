@@ -6,10 +6,13 @@
 #include "ray.hpp"
 #include "surfacelist.hpp"
 
+#define REFLECTANCE 0.4
+
 #define MAX_COLOR 255
 using Color = Vec3;
 #define BLACK (Color(0.0, 0.0, 0.0))
 #define WHITE (Color(1.0, 1.0, 1.0))
+#define LIGHT_BLUE (Color(0.6, 0.8, 0.9))
 
 class Viewport {
 public:
@@ -52,17 +55,16 @@ public:
                 bool hit = surfacelist.hit(ray, Interval(EPSILON, INFINITY), hitpoint);
 
                 if(hit) {
-                        Vec3 reflected_direction =
-                                Vec3::random_direction_on_sphere(hitpoint.normal);
+                        // assuming lambertian surface
+                        Vec3 reflected_direction = hitpoint.normal + Vec3::random();
 
                         Ray reflected_ray = Ray(hitpoint.point, reflected_direction);
-
-                        return 0.5*(ray_color(reflected_ray, surfacelist, depth-1));
+                        return REFLECTANCE*(ray_color(reflected_ray, surfacelist, depth-1));
                 }
 
                 Color color = hit
                         ? colorize(hitpoint.normal)
-                        : WHITE;
+                        : LIGHT_BLUE;
 
                 return color;
         }
@@ -101,15 +103,19 @@ private:
 
         void commit_color(const Color& color) {
                 Interval interval = Interval(0.0, 0.9999);
-                double r = interval.clamp(color.x);
-                double g = interval.clamp(color.y);
-                double b = interval.clamp(color.z);
+                double r = gamma(interval.clamp(color.x));
+                double g = gamma(interval.clamp(color.y));
+                double b = gamma(interval.clamp(color.z));
 
                 int ir = int(MAX_COLOR * r);
                 int ig = int(MAX_COLOR * g);
                 int ib = int(MAX_COLOR * b);
 
                 std::cout << ir << " " << ig << " " << ib << "\n";
+        }
+
+        inline double gamma(double linear) {
+                return std::sqrt(linear >= 0 ? linear: 0);
         }
 };
 

@@ -34,7 +34,7 @@ public:
 
                 hitpoint.point = point;
                 hitpoint.t = t;
-                hitpoint.set_face_normal(ray, normal);
+                hitpoint.set_normal(ray, normal);
 
                 return true;
         }

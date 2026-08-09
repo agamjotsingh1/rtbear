@@ -51,14 +51,6 @@ Vec3() : x(0.0), y(0.0), z(0.0) {}
         static Vec3 random(double min, double max) {
                 return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
         }
-
-        static Vec3 random_direction_on_sphere(const Vec3& normal) {
-                Vec3 random_direction = Vec3::random().normalize();
-
-                // generate vector only pointing towards normal
-                if(random_direction.dot(normal) < 0) return -random_direction;
-                else return random_direction;
-        }
 };
 
 inline Vec3 operator+(const Vec3& u, const Vec3& v) {
