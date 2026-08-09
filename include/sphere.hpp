@@ -2,18 +2,17 @@
 #define SPHERE_HPP
 
 #include <cmath>
-#include <vec3.hpp>
+#include "vec3.hpp"
+#include "surface.hpp"
 
-class Sphere {
+class Sphere: public Surface {
 public:
         Vec3 center;
         double radius;
         Sphere(): radius(0.0) {}
         Sphere(const Vec3& center, double radius): center(center), radius(radius) {}
 
-        // returns -1.0 if no intersection exists
-        // returns parameter of ray if it exists
-        double intersection(const Ray& ray) const {
+        bool hit(const Ray& ray, double tmin, double tmax, Hitpoint& hitpoint) const override {
                 // quadratic equation with coefficients a, -2b, c
                 // at^2 + (-2b)t + c = 0
                 double a = ray.direction.length_squared();
@@ -21,11 +20,17 @@ public:
                 double c = (center - ray.origin).length_squared() - radius*radius;
                 double discriminant = b*b - a*c;
 
-                if(discriminant >= 0) {
-                        return (b + std::sqrt(discriminant))/a;
-                }
+                if(discriminant < 0) return false;
 
-                return -1.0;
+                double t = (b + std::sqrt(discriminant))/a;
+                Vec3 point = ray.at(t);
+                Vec3 normal = unitize(point - center);
+
+                hitpoint.point = point;
+                hitpoint.normal = normal;
+                hitpoint.t = t;
+
+                return true;
         }
 };
 
