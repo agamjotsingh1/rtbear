@@ -20,13 +20,14 @@ void render(int width, int height, Viewport& viewport, Sphere& sphere){
                 for(int j = 0; j < width; j++) {
                         Ray pixel_ray = viewport.pixel_ray(j, i);
 
-                        Vec3 direction = unitize(pixel_ray.direction);
-                        double a = 0.5*(direction.y + 1.0);
+                        double t = sphere.intersection(pixel_ray);
+                        Vec3 normal = t >= 0
+                                ? unitize(pixel_ray.at(t) - sphere.center)
+                                : Vec3(1.0, 1.0, 1.0);
 
-                        bool hit = sphere.hit(pixel_ray);
-                        double r = hit ? a: 1.0;
-                        double g = hit ? (0.5*(direction.x + 1.0)): 1.0;
-                        double b = hit ? (1-a): 1.0;
+                        double r = 0.5*(normal.x + 1);
+                        double g = 0.5*(normal.y + 1);
+                        double b = 0.5*(normal.z + 1);
 
                         int ir = int(255.999 * r);
                         int ig = int(255.999 * g);
@@ -38,7 +39,7 @@ void render(int width, int height, Viewport& viewport, Sphere& sphere){
 }
 
 int main() {
-        Vec3 cam_pos = Vec3(0, 0, -3);
+        Vec3 cam_pos = Vec3(0, 0, 0);
         double focal_len = 2;
         double viewport_height = 2;
         double viewport_width = viewport_height * ASPECT_RATIO;
