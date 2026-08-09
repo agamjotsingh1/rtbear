@@ -20,6 +20,12 @@ public:
         bool strict_contains(double a) const {
                 return (a < max) && (a > min);
         }
+
+        double clamp(double a) const {
+                if(a < min) return min;
+                if(a > max) return max;
+                return a;
+        }
 };
 
 #endif
