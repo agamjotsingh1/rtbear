@@ -29,7 +29,7 @@ int main() {
                 std::make_shared<Lambertian>(Vec3(0.1, 0.9, 0.4), DARK_GREEN, 0.1);
 
         std::shared_ptr<Material> sky =
-                std::make_shared<Lambertian>(Vec3(1.0, 1.0, 1.0), LIGHT_BLUE, 1.0);
+                std::make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5), LIGHT_BLUE, 0.9);
 
         std::shared_ptr<Material> metal =
                 std::make_shared<Metal>(Vec3(0.25, 0.25, 0.2), VOID, 0.0);
@@ -38,17 +38,21 @@ int main() {
                 std::make_shared<Metal>(Vec3(0.25, 0.25, 0.2), VOID, 0.1);
 
         std::shared_ptr<Material> ground =
-                std::make_shared<Lambertian>(Vec3(0.1, 0.4, 0.4), LIGHT_BROWN, 0.2);
+                std::make_shared<Lambertian>(Vec3(1.0, 1.0, 1.0), DARK_BROWN, 1.0);
 
         std::shared_ptr<Material> water =
                 std::make_shared<Dielectric>(VOID, 1.333);
 
+        std::shared_ptr<Material> bubble =
+                std::make_shared<Dielectric>(VOID, 1.0/1.333);
+
         SurfaceList surfacelist;
         surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, 0), 30, sky)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, -5), 0.3, metal)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(1, 2, -4), 0.3, green_lambertian)));
+        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, -5), 1, metal)));
+        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(1, 1, -4), 0.5, green_lambertian)));
         surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, -6, -4), 5, ground)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(1, 0, -2), 0.4, water)));
+        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.2, water)));
+        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.18, bubble)));
 
         Viewport viewport(camera, image, config);
         viewport.render(surfacelist);

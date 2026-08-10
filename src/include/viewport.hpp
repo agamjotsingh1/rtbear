@@ -51,7 +51,7 @@ public:
                 Vec3 direction = pixel_zero + ((x + rand_offset_x)*pixel_delta_x)
                         + ((y + rand_offset_y)*pixel_delta_y) - camera.pos;
 
-                return Ray(camera.pos, direction, AIR_REFRACTIVE_INDEX);
+                return Ray(camera.pos, direction);
         }
 
         Color ray_color(const Ray& ray, SurfaceList& surfacelist, int depth) {
