@@ -13,6 +13,7 @@ class Hitpoint {
 public:
         Vec3 point;
         Vec3 normal;
+        bool front_face;
         double t; // ray parameter
 
         // shared ptr because of forward declaration
@@ -21,7 +22,7 @@ public:
 
         void set_normal(const Ray& ray, const Vec3& outward_normal) {
                 // front face if the ray direction and outward normal point in different directions
-                bool front_face = dot(ray.direction, outward_normal) < 0;
+                front_face = dot(ray.direction, outward_normal) < 0;
 
                 // make it so that normal points always points against the ray direction
                 normal = front_face ? outward_normal: -outward_normal;

@@ -51,7 +51,7 @@ public:
                 Vec3 direction = pixel_zero + ((x + rand_offset_x)*pixel_delta_x)
                         + ((y + rand_offset_y)*pixel_delta_y) - camera.pos;
 
-                return Ray(camera.pos, direction);
+                return Ray(camera.pos, direction, AIR_REFRACTIVE_INDEX);
         }
 
         Color ray_color(const Ray& ray, SurfaceList& surfacelist, int depth) {
@@ -65,13 +65,17 @@ public:
                         Ray scattered_ray;
                         Vec3 attenuation;
 
-                        if((hitpoint.material)->scatter(ray, hitpoint, attenuation, scattered_ray))
-                                return attenuation * ray_color(scattered_ray, surfacelist, depth-1);
+                        if((hitpoint.material)->scatter(
+                                ray, hitpoint,
+                                attenuation, scattered_ray
+                        ))
+                                return attenuation * ray_color(
+                                        scattered_ray, surfacelist, depth-1);
                         else
-                                return BLACK;
+                                return (hitpoint.material)->color;
                 }
 
-                return LIGHT_BLUE; // void
+                return VOID;
         }
 
         void render(SurfaceList& surfacelist){

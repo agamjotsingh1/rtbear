@@ -13,6 +13,8 @@ using Color = Vec3;
         (static_cast<double>(b))/(MAX_COLOR-MIN_COLOR)))
 
 #define BLACK           (RGB(0, 0, 0))
+#define VOID            BLACK
+
 #define WHITE           (RGB(255, 255, 255))
 #define RED             (RGB(255, 0, 0))
 #define GREEN           (RGB(0, 255, 0))

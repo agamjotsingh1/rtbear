@@ -98,4 +98,27 @@ inline Vec3 cross(const Vec3& u, const Vec3& v) {
         return Vec3(x, y, z);
 }
 
+inline Vec3 reflect(const Vec3& v, const Vec3& normal) {
+        return (v - 2*dot(v, normal)*normal);
+}
+
+// ref: https://physics.stackexchange.com/questions/435512/snells-law-in-vector-form
+inline Vec3 refract(
+        const Vec3& v,
+        const Vec3& normal,
+        double relative_refractive_index
+) {
+        Vec3 outward_normal = -(normal.normalize_bipolar());
+        Vec3 unit_v = v.normalize_bipolar();
+
+        double beta = 1 - SQUARE(dot(outward_normal, unit_v));
+        double alpha = std::sqrt(1 - (SQUARE(relative_refractive_index) * beta));
+
+        Vec3 normal_component = alpha * outward_normal;
+        Vec3 off_normal_component = relative_refractive_index *
+                (unit_v - (dot(unit_v, outward_normal)*outward_normal));
+
+        return normal_component + off_normal_component;
+}
+
 #endif
