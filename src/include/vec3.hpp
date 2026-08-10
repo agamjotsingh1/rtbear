@@ -91,4 +91,11 @@ inline double dot(const Vec3& u, const Vec3& v) {
         return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
 }
 
+inline Vec3 cross(const Vec3& u, const Vec3& v) {
+        double x = u.y*v.z - u.z*v.y;
+        double y = u.z*v.x - u.x*v.z;
+        double z = u.x*v.y - v.x*u.y;
+        return Vec3(x, y, z);
+}
+
 #endif
