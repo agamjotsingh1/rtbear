@@ -18,7 +18,10 @@ public:
                 const Vec3& center,
                 double radius,
                 std::shared_ptr<Material> material
-        ): center(center), radius(radius), material(material) {}
+        ): center(center), radius(radius), material(material) {
+                Vec3 r = Vec3(radius, radius, radius);
+                bbox = BBox(center - r, center + r);
+        }
 
         bool hit(
                 const Ray& ray,

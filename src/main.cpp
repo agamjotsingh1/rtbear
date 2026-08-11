@@ -9,6 +9,8 @@
 #include "surfacelist.hpp"
 #include "material.hpp"
 #include "scene.hpp"
+#include "bbox.hpp"
+#include "bvh.hpp"
 
 // display parameters
 #define ASPECT_RATIO (16.0/9.0)
@@ -46,15 +48,17 @@ int main() {
         std::shared_ptr<Material> bubble =
                 std::make_shared<Dielectric>(VOID, 1.0/1.333);
 
-        SurfaceList surfacelist;
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, 0), 30, sky)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, -5), 1, metal)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(1, 1, -4), 0.5, green_lambertian)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0, -6, -4), 5, ground)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.2, water)));
-        surfacelist.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.18, bubble)));
+        SurfaceList world;
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, -5), 1, metal)));
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(1, 1, -4), 0.5, green_lambertian)));
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(0, -6, -4), 5, ground)));
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.2, water)));
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.18, bubble)));
 
+        world = SurfaceList(std::make_shared<BvhNode>(world));
+        // keep sky seperate
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, 0), 30, sky)));
         Viewport viewport(camera, image, config);
-        viewport.render(surfacelist);
+        viewport.render(world);
         return 0;
 }

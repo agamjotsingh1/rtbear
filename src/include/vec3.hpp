@@ -49,6 +49,13 @@ public:
                 return Vec3(x / len, y / len, z / len);
         }
 
+        double axis(Axis n) const {
+                if(n == X) return x;
+                if(n == Y) return y;
+                if(n == Z) return z;
+                return NAN;
+        }
+
         static Vec3 random() {
                 return Vec3(random_double(), random_double(), random_double());
         }

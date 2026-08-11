@@ -1,6 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+enum Axis { X, Y, Z };
+
 #include <random>
 #include "interval.hpp"
 
@@ -18,8 +20,13 @@ inline double random_double(const Interval& interval) {
         return interval.min + (interval.max - interval.min)*random_double();
 }
 
-inline double with_prob(double p) {
-        return (random_double(Interval::unipolar()) < p);
+inline int random_int(const Interval& interval) {
+        static std::uniform_int_distribution<int> distribution(
+                static_cast<int>(interval.min),
+                static_cast<int>(interval.max)
+        );
+        static std::mt19937 generator;
+        return distribution(generator);
 }
 
 // returns gamma2 corrected rgb value

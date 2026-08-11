@@ -12,11 +12,11 @@ public:
         std::vector<std::shared_ptr<Surface>> surfaces;
 
         SurfaceList() {}
-        SurfaceList(std::shared_ptr<Surface> surfaces) {
+        SurfaceList(std::shared_ptr<Surface> surface) {
                 push(surface);
         }
 
-        void push(std::shared_ptr<Surface> surfaces) {
+        void push(std::shared_ptr<Surface> surface) {
                 surfaces.push_back(surface);
         }
 

@@ -5,6 +5,7 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "interval.hpp"
+#include "bbox.hpp"
 
 // defined later in material.hpp
 class Material;
@@ -31,6 +32,8 @@ public:
 
 class Surface {
 public:
+        BBox bbox;
+
         virtual ~Surface() {};
         virtual bool hit(
                 const Ray& ray,
