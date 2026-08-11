@@ -26,8 +26,8 @@ public:
 class Lambertian: public Material {
 public:
         Lambertian() {}
-        Lambertian(Vec3 albedo, Color color, double prob):
-                Material(color), albedo(albedo), prob(prob) {}
+        Lambertian(Vec3 albedo, Color color, double absorb_prob):
+                Material(color), albedo(albedo), absorb_prob(absorb_prob) {}
 
         bool scatter(
                 const Ray& ray,
@@ -35,8 +35,7 @@ public:
                 Vec3& attenuation,
                 Ray& scattered_ray
         ) const override {
-                double p = Interval::unipolar().clamp(prob);
-                if(random_double(Interval::unipolar()) < p) return false;
+                if(random_double(Interval::unipolar()) < absorb_prob) return false;
 
                 Vec3 scatter_direction = hitpoint.normal + Vec3::random();
 
@@ -51,7 +50,7 @@ public:
 
 private:
         Vec3 albedo;
-        double prob;
+        double absorb_prob;
 };
 
 class Metal: public Material {
@@ -66,10 +65,10 @@ public:
                 Vec3& attenuation,
                 Ray& scattered_ray
         ) const override {
-                Vec3 v = ray.direction.normalize_bipolar();
+                Vec3 v = ray.direction.unit();
                 Vec3 scatter_direction = reflect(v, hitpoint.normal);
                 Vec3 fuzzed_scatter_direction =
-                        scatter_direction.normalize_bipolar() +
+                        scatter_direction.unit() +
                         (fuzz * Vec3::random(Interval::bipolar()));
 
                 scattered_ray = Ray(hitpoint.point, fuzzed_scatter_direction);
@@ -94,12 +93,12 @@ public:
                 Vec3& attenuation,
                 Ray& scattered_ray
         ) const override {
-                Vec3 v = ray.direction.normalize_bipolar();
+                Vec3 v = ray.direction.unit();
                 Vec3 scatter_direction;
 
                 double cos_theta = Interval::bipolar().clamp(
-                                dot(-hitpoint.normal.normalize_bipolar(),
-                                ray.direction.normalize_bipolar())
+                                dot(-hitpoint.normal.unit(),
+                                ray.direction.unit())
                         );
 
                 double sin_theta = std::sqrt(1 - SQUARE(cos_theta));

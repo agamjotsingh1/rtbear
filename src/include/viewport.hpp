@@ -23,14 +23,14 @@ public:
                 config(config),
                 image(image)
         {
-                Vec3 view_normal = camera.view.normalize_bipolar();
-                Vec3 right = cross(view_normal, WORLD_UP).normalize_bipolar();
+                Vec3 view_normal = camera.view.unit();
+                Vec3 right = cross(view_normal, WORLD_UP).unit();
 
                 if(right.is_zero()) {
-                        right = cross(view_normal, WORLD_RIGHT).normalize_bipolar();
+                        right = cross(view_normal, WORLD_RIGHT).unit();
                 }
 
-                Vec3 down = cross(view_normal, right).normalize_bipolar();
+                Vec3 down = cross(view_normal, right).unit();
 
                 // vectors u and v for positions of viewport in 3D
                 // -height because increase in y in viewport sense

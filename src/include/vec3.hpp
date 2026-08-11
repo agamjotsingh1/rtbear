@@ -43,15 +43,10 @@ public:
                 return std::sqrt(length_squared());
         }
 
-        Vec3 normalize_bipolar() const {
+        Vec3 unit() const {
                 double len = length();
                 if (len == 0) return Vec3(0, 0, 0);
                 return Vec3(x / len, y / len, z / len);
-        }
-
-        inline Vec3 normalize_unipolar() const {
-                Vec3 bipolar = this->normalize_bipolar(); 
-                return Vec3(0.5*(bipolar.x + 1), 0.5*(bipolar.y + 1), 0.5*(bipolar.z + 1));
         }
 
         static Vec3 random() {
@@ -108,8 +103,8 @@ inline Vec3 refract(
         const Vec3& normal,
         double relative_refractive_index
 ) {
-        Vec3 outward_normal = -(normal.normalize_bipolar());
-        Vec3 unit_v = v.normalize_bipolar();
+        Vec3 outward_normal = -(normal.unit());
+        Vec3 unit_v = v.unit();
 
         double beta = 1 - SQUARE(dot(outward_normal, unit_v));
         double alpha = std::sqrt(1 - (SQUARE(relative_refractive_index) * beta));

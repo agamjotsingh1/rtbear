@@ -9,19 +9,19 @@
 
 class SurfaceList: public Surface {
 public:
-        std::vector<std::shared_ptr<Surface>> world;
+        std::vector<std::shared_ptr<Surface>> surfaces;
 
         SurfaceList() {}
-        SurfaceList(std::shared_ptr<Surface> surface) {
+        SurfaceList(std::shared_ptr<Surface> surfaces) {
                 push(surface);
         }
 
-        void push(std::shared_ptr<Surface> surface) {
-                world.push_back(surface);
+        void push(std::shared_ptr<Surface> surfaces) {
+                surfaces.push_back(surface);
         }
 
         void clear() {
-                world.clear();
+                surfaces.clear();
         }
         
         // check if any surface it hit
@@ -36,7 +36,7 @@ public:
                 bool is_hit = false;
                 Hitpoint temp_hitpoint;
 
-                for(const std::shared_ptr<Surface>& surface : world) {
+                for(const std::shared_ptr<Surface>& surface : surfaces) {
                         if(surface->hit(ray, Interval(tmin, closest_t), temp_hitpoint)){
                                 is_hit = true;
                                 closest_t = temp_hitpoint.t;
