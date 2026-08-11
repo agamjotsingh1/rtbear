@@ -36,6 +36,7 @@ using Color = Vec3;
 #define DARK_RED        (RGB(139, 0, 0))
 #define DARK_GREEN      (RGB(0, 100, 0))
 #define DARK_BLUE       (RGB(0, 0, 139))
+#define BLUE_BLACK      (RGB(4, 7, 32))
 #define DARK_YELLOW     (RGB(153, 153, 0))
 #define DARK_CYAN       (RGB(0, 139, 139))
 #define DARK_MAGENTA    (RGB(139, 0, 139))

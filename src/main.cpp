@@ -24,14 +24,17 @@ int main() {
         RenderConfig config = {
                 .viewport_height = 2.0,
                 .viewport_width = 2.0 * ASPECT_RATIO,
-                .samples_per_pixel = 100
+                .samples_per_pixel = 500
         };
 
         std::shared_ptr<Material> green_lambertian =
-                std::make_shared<Lambertian>(Vec3(0.1, 0.9, 0.4), DARK_GREEN, 0.1);
+                std::make_shared<Lambertian>(Vec3(0.1, 0.9, 0.4), DARK_GREEN, 0.3);
 
         std::shared_ptr<Material> sky =
-                std::make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5), LIGHT_BLUE, 0.9);
+                std::make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5), BLUE_BLACK, 0.9);
+
+        std::shared_ptr<Material> sun =
+                std::make_shared<Lambertian>(Vec3(1.0, 1.0, 1.0), YELLOW, 1.0);
 
         std::shared_ptr<Material> metal =
                 std::make_shared<Metal>(Vec3(0.25, 0.25, 0.2), VOID, 0.0);
@@ -40,7 +43,7 @@ int main() {
                 std::make_shared<Metal>(Vec3(0.25, 0.25, 0.2), VOID, 0.1);
 
         std::shared_ptr<Material> ground =
-                std::make_shared<Lambertian>(Vec3(1.0, 1.0, 1.0), DARK_BROWN, 1.0);
+                std::make_shared<Lambertian>(Vec3(0.9, 0.5, 0.2), DARK_BROWN, 0.4);
 
         std::shared_ptr<Material> water =
                 std::make_shared<Dielectric>(VOID, 1.333);
@@ -49,11 +52,12 @@ int main() {
                 std::make_shared<Dielectric>(VOID, 1.0/1.333);
 
         SurfaceList world;
-        world.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, -5), 1, metal)));
+        world.push(std::make_shared<Sphere>(Sphere(Vec3(0, 0, -5), 1, fuzz_metal)));
         world.push(std::make_shared<Sphere>(Sphere(Vec3(1, 1, -4), 0.5, green_lambertian)));
         world.push(std::make_shared<Sphere>(Sphere(Vec3(0, -6, -4), 5, ground)));
         world.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.2, water)));
         world.push(std::make_shared<Sphere>(Sphere(Vec3(0.3, 0.5, -2), 0.18, bubble)));
+        // world.push(std::make_shared<Sphere>(Sphere(Vec3(-0.6, 0.6, -2), 0.2, sun)));
 
         world = SurfaceList(std::make_shared<BvhNode>(world));
         // keep sky seperate

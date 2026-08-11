@@ -20,8 +20,8 @@ public:
                 const RenderConfig config
         ):
                 camera(camera),
-                config(config),
-                image(image)
+                image(image),
+                config(config)
         {
                 Vec3 view_normal = camera.view.unit();
                 Vec3 right = cross(view_normal, WORLD_UP).unit();
