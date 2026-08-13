@@ -7,8 +7,7 @@
 class Material {
 public:
         Color color;
-
-        Material() {}
+        Material(): color(BLACK) {}
         Material(Color color): color(color) {}
 
         virtual ~Material() {}
@@ -26,8 +25,7 @@ public:
 class Lambertian: public Material {
 public:
         Lambertian() {}
-        Lambertian(Vec3 albedo, Color color, double absorb_prob):
-                Material(color), albedo(albedo), absorb_prob(absorb_prob) {}
+        Lambertian(Vec3 albedo): albedo(albedo) {}
 
         bool scatter(
                 const Ray& ray,
@@ -35,8 +33,6 @@ public:
                 Vec3& attenuation,
                 Ray& scattered_ray
         ) const override {
-                if(random_double(Interval::unipolar()) < absorb_prob) return false;
-
                 Vec3 scatter_direction = hitpoint.normal + Vec3::random();
 
                 while(scatter_direction.is_zero()) {
@@ -50,14 +46,13 @@ public:
 
 private:
         Vec3 albedo;
-        double absorb_prob;
 };
 
 class Metal: public Material {
 public:
         Metal() {}
-        Metal(Vec3 albedo, Color color, double fuzz):
-                Material(color), albedo(albedo), fuzz(Interval::unipolar().clamp(fuzz)) {}
+        Metal(Vec3 albedo, double fuzz):
+                albedo(albedo), fuzz(Interval::unipolar().clamp(fuzz)) {}
 
         bool scatter(
                 const Ray& ray,
@@ -84,8 +79,8 @@ private:
 class Dielectric: public Material {
 public:
         Dielectric() {}
-        Dielectric(Color color, double refractive_index):
-                Material(color), refractive_index(refractive_index) {}
+        Dielectric(double refractive_index):
+                refractive_index(refractive_index) {}
 
         bool scatter(
                 const Ray& ray,
@@ -141,6 +136,12 @@ private:
                 r0 = SQUARE(r0);
                 return r0 + ((1 - r0)*std::pow(1-cosine, 5));
         }
+};
+
+class LightSource: public Material {
+public:
+        LightSource() {}
+        LightSource(Color color): Material(color) {}
 };
 
 #endif

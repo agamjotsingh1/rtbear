@@ -2,7 +2,7 @@ CXX      := g++
 CXXSTD   := -std=c++17
 WARN     := -Wall -Wextra -Wno-unused-parameter
 OPT      := -O3
-CXXFLAGS := $(CXXSTD) $(WARN) $(OPT) -MMD -MP
+CXXFLAGS := $(CXXSTD) $(WARN) $(OPT) -MMD -MP -march=native -ffast-math
 
 PPM2JPEG := ppmtojpeg
 

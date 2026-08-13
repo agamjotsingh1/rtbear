@@ -18,7 +18,7 @@ public:
                 SurfaceList& surfacelist,
                 size_t start, size_t end
         ) {
-                Axis random_axis = static_cast<Axis>(random_int(Interval(X, Z)));
+                Axis random_axis = static_cast<Axis>(random_int(Interval(X, Z+1)));
 
                 auto comparator = [&random_axis](
                         const std::shared_ptr<Surface> a,

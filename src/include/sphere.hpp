@@ -37,9 +37,10 @@ public:
 
                 if(discriminant < 0) return false;
 
-                double t = (b - std::sqrt(discriminant))/a;
+                double sqrt_discriminant = std::sqrt(discriminant);
+                double t = (b - sqrt_discriminant)/a;
                 if(!interval.contains(t)) {
-                        t = (b + std::sqrt(discriminant))/a;
+                        t = (b + sqrt_discriminant)/a;
                         if(!interval.contains(t)) return false;
                 }
 
