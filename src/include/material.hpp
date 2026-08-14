@@ -1,15 +1,14 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
+#include "vec3.hpp"
+#include "color.hpp"
 #include "surface.hpp"
+#include "texture.hpp"
 #include "util.hpp"
 
 class Material {
 public:
-        Color color;
-        Material(): color(BLACK) {}
-        Material(Color color): color(color) {}
-
         virtual ~Material() {}
 
         virtual bool scatter(
@@ -20,12 +19,23 @@ public:
         ) const {
                 return false;
         }
+
+        virtual Color emit(
+                const Ray& ray,
+                const Hitpoint& hitpoint
+        ) const {
+                return BLACK;
+        }
 };
 
 class Lambertian: public Material {
 public:
         Lambertian() {}
-        Lambertian(Vec3 albedo): albedo(albedo) {}
+        Lambertian(Vec3 albedo):
+                texture(std::make_shared<Solid>(albedo)) {}
+
+        Lambertian(std::shared_ptr<Texture> texture):
+                texture(texture) {}
 
         bool scatter(
                 const Ray& ray,
@@ -40,12 +50,16 @@ public:
                 }
 
                 scattered_ray = Ray(hitpoint.point, scatter_direction);
-                attenuation = albedo;
+                attenuation = texture->color(
+                        hitpoint.texture_u,
+                        hitpoint.texture_v,
+                        hitpoint.point
+                );
                 return true;
         }
 
 private:
-        Vec3 albedo;
+        std::shared_ptr<Texture> texture;
 };
 
 class Metal: public Material {
@@ -141,7 +155,21 @@ private:
 class LightSource: public Material {
 public:
         LightSource() {}
-        LightSource(Color color): Material(color) {}
+        LightSource(Color color, Color diffuse, Vec3 direction):
+                color(color), diffuse(diffuse), direction(direction.unit()) {}
+
+        Color emit(
+                const Ray& ray,
+                const Hitpoint& hitpoint
+        ) const override {
+                double lambert = dot(hitpoint.normal.unit(), direction);
+                if(lambert < 0) lambert = 0;
+                // by diffuse lighting equation
+                return color*diffuse*lambert;
+        }
+private:
+        Color color, diffuse;
+        Vec3 direction;
 };
 
 #endif

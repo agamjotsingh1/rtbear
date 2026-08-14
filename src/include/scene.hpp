@@ -3,12 +3,12 @@
 #include <utility>
 #include "vec3.hpp"
 
-struct Camera {
+struct CameraConfig {
         Vec3 pos;
         Vec3 view; // vector from camera to center of viewport
 };
 
-struct Image {
+struct ImageConfig {
         int height;
         int width;
 };

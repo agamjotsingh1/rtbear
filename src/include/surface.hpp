@@ -17,6 +17,8 @@ public:
         bool front_face;
         double t; // ray parameter
 
+        double texture_u, texture_v;
+
         // shared ptr because of forward declaration
         // and multiple hitpoints may refer to material
         std::shared_ptr<Material> material;

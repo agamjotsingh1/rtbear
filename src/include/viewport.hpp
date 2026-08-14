@@ -15,8 +15,8 @@
 class Viewport {
 public:
         Viewport(
-                const Camera camera,
-                const Image image,
+                const CameraConfig camera,
+                const ImageConfig image,
                 const RenderConfig config
         ):
                 camera(camera),
@@ -72,7 +72,7 @@ public:
                                 return attenuation * ray_color(
                                         scattered_ray, surfacelist, depth-1);
                         else
-                                return (hitpoint.material)->color;
+                                return (hitpoint.material)->emit(ray, hitpoint);
                 }
 
                 return VOID;
@@ -98,9 +98,10 @@ public:
         }
 
 private:
-        Camera camera;
-        Image image;
+        CameraConfig camera;
+        ImageConfig image;
         RenderConfig config;
+
         Vec3 pixel_zero; // first pixel at (0, 0) of the viewport
         Vec3 pixel_delta_x, pixel_delta_y;
 

@@ -8,7 +8,10 @@ enum Axis { X, Y, Z };
 #include "interval.hpp"
 
 #define EPSILON (1e-5)
+#define PI (3.14159265358979323846)
 #define SQUARE(a) (a*a)
+
+#define NCHAN 3
 
 // get a random value between [0.0, 1.0)
 inline double random_double() {

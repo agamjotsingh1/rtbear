@@ -21,6 +21,7 @@ public:
         ): center(center), radius(radius), material(material) {
                 Vec3 r = Vec3(radius, radius, radius);
                 bbox = BBox(center - r, center + r);
+
         }
 
         bool hit(
@@ -51,12 +52,29 @@ public:
                 hitpoint.t = t;
                 hitpoint.set_normal(ray, normal);
                 hitpoint.material = material;
-
+                get_uv(normal, hitpoint.texture_u, hitpoint.texture_v);
                 return true;
         }
 
 private:
         std::shared_ptr<Material> material;
+
+        void get_uv(const Vec3& p, double& u, double& v) const {
+                // theta = angle with positive y-axis
+                double dist = std::sqrt(SQUARE(p.x) + SQUARE(p.z));
+                double theta = std::abs(std::atan2(dist, p.y));
+                if(std::isnan(theta)) theta = PI/2;
+                else if(theta < 0) theta = -theta;
+
+                v = theta/PI;
+
+                // phi = angle with positive x-axis
+                double phi = std::atan2(p.z, p.x);
+                if(std::isnan(phi)) phi = 0.0;
+                else if(phi < 0) phi = 2*PI + phi;
+
+                u = phi/(2*PI);
+        }
 };
 
 #endif
