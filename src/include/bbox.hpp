@@ -22,6 +22,12 @@ public:
                 z = Interval::merge(b1.z, b2.z);
         }
 
+        void pad(double padding) {
+                x = x.pad(padding);
+                y = y.pad(padding);
+                z = z.pad(padding);
+        }
+
         bool hit(const Ray& ray, const Interval& interval) const {
                 Interval t = interval;
                 for(int axis = X; axis <= Z; axis++) {
